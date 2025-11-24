@@ -84,7 +84,11 @@ router.post('/upload', auth, upload.single('file'), async (req, res) => {
 
         console.log('File received:', req.file);
 
-        const fileName = req.file.originalname;
+        //const fileName = req.file.originalname;
+        // Sanitize filename (Supabase does not allow []{}()<> etc.)
+        let safeName = req.file.originalname.replace(/[\[\]{}()<>#?&%*"':;]/g, '_');
+        safeName = safeName.replace(/\s+/g, '_'); // optional: replace spaces
+        const fileName = `${Date.now()}_${safeName}`;
 
         // Upload to Supabase
         const { data, error } = await supabase.storage
@@ -122,6 +126,5 @@ router.post('/upload', auth, upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'Upload failed', details: err.message });
     }
 });
-
 
 module.exports = router
