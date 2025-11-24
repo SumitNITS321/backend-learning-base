@@ -85,6 +85,7 @@ router.post('/upload', auth, upload.single('file'), async (req, res) => {
         console.log('File received:', req.file);
 
         //const fileName = req.file.originalname;
+        
         // Sanitize filename (Supabase does not allow []{}()<> etc.)
         let safeName = req.file.originalname.replace(/[\[\]{}()<>#?&%*"':;]/g, '_');
         safeName = safeName.replace(/\s+/g, '_'); // optional: replace spaces
